@@ -30,7 +30,7 @@ class SZRmodel(object):
             self.states = np.zeros([1,self.N])
             init_zombies =  np.random.choice(self.G.number_of_nodes(),Znumber)
             self.states[0,init_zombies] = 1 #SETTING ZOMBIE NODES TO STATE = 1
-            self.edges = np.array(g.edges())
+            self.edges = np.array(G.edges())
         
         def step(self):
             # G.size() returns number of EDGES! 
