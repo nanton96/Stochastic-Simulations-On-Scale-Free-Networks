@@ -27,9 +27,9 @@ class SZRmodel(object):
             
             self.G = topology
             self.N = self.G.number_of_nodes()
-            self.states = np.zeros([1,self.N])
+            self.states = np.zeros(self.N)
             init_zombies =  np.random.choice(self.G.number_of_nodes(),Znumber)
-            self.states[0,init_zombies] = 1 #SETTING ZOMBIE NODES TO STATE = 1
+            self.states[init_zombies] = 1 #SETTING ZOMBIE NODES TO STATE = 1
             self.edges = np.array(G.edges())
         
         def step(self):
@@ -39,8 +39,8 @@ class SZRmodel(object):
             #we check the states of the nodes on each side of link
             agent1 = self.edges[link,0]
             agent2 = self.edges[link,1]
-            state1 = self.states[0,agent1]
-            state2 = self.states[0,agent2]
+            state1 = self.states[agent1]
+            state2 = self.states[agent2]
             #In order for the states to interact one has to be human, state = 0
             #and the other has to be a zombie state = 1
             #so it is sufficient to check if state1+state2 == 1
@@ -67,4 +67,10 @@ class SZRmodel(object):
             i=0
             while (i < niter):
                 self.step()
-            #NEED TO SAVE DATA DURING THE SIMULATION
+            	if i%self.N == 0:
+			time = i / self.N
+			self.save(time)
+	
+	def save(self,time,trial):
+  	    dict_to_save = {time : self.states}	
+	    
