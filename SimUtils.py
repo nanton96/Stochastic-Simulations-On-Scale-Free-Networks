@@ -64,11 +64,13 @@ class SZRmodel(object):
                     self.states[human] = 1
                     
         def run(self):
-            for i in range(10000):
+            num=10000
+            for i in range(num):
                 self.step()
                 if(i%100==0):
                     df_state = pd.DataFrame(self.states)
                     print(self.states)
                     # stores states in dataFrame
                     self.df = pd.concat([self.df, df_state], axis=1)
-                    self.df.to_csv('nick.csv')
+                    if i==num-1:
+                        self.df.to_csv('nick.csv')
