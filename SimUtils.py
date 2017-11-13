@@ -11,26 +11,26 @@ class SZRmodel(object):
         # to run the simulation.             #
         ######################################
         
-        #Probabilities of interactions are defined as class variables
-        
-        kill_prob = 0.3
-        inf_prob = 0.2
-        assert kill_prob+inf_prob <= 1
+
         
         #The initializer takes a networkx object as a topology
         #and iniatializes the model at t = 0
         
-        def __init__(self,topology,Znumber=1):
+        def __init__(self,topology,Znumber=1,kill_prob=0.3,inf_prob = 0.5):
             
             assert type(topology) is nx.classes.graph.Graph
             assert type(Znumber) is int
+            #Probabilities of interactions
+            self.kill_prob = kill_prob
+            self.inf_prob = inf_prob
+            assert self.kill_prob+self.inf_prob <= 1
             
             self.G = topology
             self.N = self.G.number_of_nodes()
             self.states = np.zeros(self.N)
             init_zombies =  np.random.choice(self.G.number_of_nodes(),Znumber)
             self.states[init_zombies] = 1 #SETTING ZOMBIE NODES TO STATE = 1
-            self.edges = np.array(G.edges())
+            self.edges = np.array(self.G.edges())
         
         def step(self):
             # G.size() returns number of EDGES! 
@@ -54,23 +54,11 @@ class SZRmodel(object):
                     human = agent2
                     zombie = agent1
                 roll = np.random.uniform()
-                if roll < kill_prob: 
+                if roll < self.kill_prob: 
                     #Human wins
                     #Z --> R
-                    self.states[0,zombie] = 2
-                elif roll < kill_prob + inf_prob:
+                    self.states[zombie] = 2
+                elif roll < self.kill_prob + self.inf_prob:
                     #Zombie wins
                     #H --> Z
-                    self.states[0,human] = 1
-                
-        def run(self, niter = 10**6):
-            i=0
-            while (i < niter):
-                self.step()
-            	if i%self.N == 0:
-			time = i / self.N
-			self.save(time)
-	
-	def save(self,time,trial):
-  	    dict_to_save = {time : self.states}	
-	    
+                    self.states[human] = 1
