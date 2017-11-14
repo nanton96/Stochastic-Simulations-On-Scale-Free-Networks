@@ -32,6 +32,7 @@ class SZRmodel(object):
             self.states[init_zombies] = 1 #SETTING ZOMBIE NODES TO STATE = 1
             self.edges = np.array(self.G.edges())
             self.df=pd.DataFrame()#creates empty dataframe
+
         def step(self):
             # G.size() returns number of EDGES! 
             link = int(np.random.choice(np.array(self.G.size()),1))
@@ -61,8 +62,7 @@ class SZRmodel(object):
                 elif roll < self.kill_prob + self.inf_prob:
                     #Zombie wins
                     #H --> Z
-                    self.states[human] = 1
-                    
+                    self.states[human] = 1         
         def run(self):
             num=10000
             for i in range(num):
@@ -74,3 +74,4 @@ class SZRmodel(object):
                     self.df = pd.concat([self.df, df_state], axis=1)
                     if i==num-1:
                         self.df.to_csv('nick.csv')
+
