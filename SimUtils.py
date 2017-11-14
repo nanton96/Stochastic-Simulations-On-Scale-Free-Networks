@@ -62,16 +62,15 @@ class SZRmodel(object):
                 elif roll < self.kill_prob + self.inf_prob:
                     #Zombie wins
                     #H --> Z
-                    self.states[human] = 1         
-        def run(self):
-            num=10000
-            for i in range(num):
+                    self.states[human] = 1
+        def run(self, num_trial):
+            niter= 10000
+            timestep = 100
+            for i in range(niter):
                 self.step()
-                if(i%100==0):
+                if(i%timestep==0):
                     df_state = pd.DataFrame(self.states)
-                    print(self.states)
                     # stores states in dataFrame
                     self.df = pd.concat([self.df, df_state], axis=1)
-                    if i==num-1:
-                        self.df.to_csv('nick.csv')
+            self.df.to_csv('simData/trial' + str(num_trial) + '.csv')
 
