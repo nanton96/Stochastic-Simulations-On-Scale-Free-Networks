@@ -16,7 +16,7 @@ class SZRmodel(object):
         #The initializer takes a networkx object as a topology
         #and iniatializes the model at t = 0
         
-        def __init__(self,topology,Znumber=1,kill_prob=0.3,inf_prob = 0.5):
+        def __init__(self,topology,Znumber=1,kill_prob=0.2,inf_prob = 0.8):
             
             assert type(topology) is nx.classes.graph.Graph
             assert type(Znumber) is int
@@ -63,9 +63,11 @@ class SZRmodel(object):
                     #Zombie wins
                     #H --> Z
                     self.states[human] = 1
-        def run(self, num_trial):
-            niter= 10000
-            timestep = 100
+                    
+        def runTrial(self, num_trial, niter= 15000, timestep = 50):
+            #This method performs one Trial of the simulation and stores 
+            #data regarding the states of the system at certain timesteps
+            #in csv files
             for i in range(niter):
                 self.step()
                 if(i%timestep==0):
@@ -73,4 +75,11 @@ class SZRmodel(object):
                     # stores states in dataFrame
                     self.df = pd.concat([self.df, df_state], axis=1)
             self.df.to_csv('simData/trial' + str(num_trial) + '.csv')
+            self.df = pd.DataFrame()
+def runSim(G, trials = 100):
+    #this calls runTrial() a number of times and saves the results
+    for i in range(trials):
+        model = SZRmodel(topology=G)
+        model.runTrial(i)
+                
 
