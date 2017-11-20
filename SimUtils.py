@@ -64,7 +64,7 @@ class SZRmodel(object):
                     #H --> Z
                     self.states[human] = 1
                     
-        def runTrial(self, num_trial, niter= 15000, timestep = 50):
+        def runTrial(self, num_trial,target_direc, niter= 25000, timestep = 50):
             #This method performs one Trial of the simulation and stores 
             #data regarding the states of the system at certain timesteps
             #in csv files
@@ -74,12 +74,12 @@ class SZRmodel(object):
                     df_state = pd.DataFrame(self.states)
                     # stores states in dataFrame
                     self.df = pd.concat([self.df, df_state], axis=1)
-            self.df.to_csv('simData/trial' + str(num_trial) + '.csv')
+            self.df.to_csv(target_direc + '/trial' + str(num_trial) + '.csv')
             self.df = pd.DataFrame()
-def runSim(G, trials = 100):
+def runSim(G, trials = 100,target_direc='simData'):
     #this calls runTrial() a number of times and saves the results
     for i in range(trials):
         model = SZRmodel(topology=G)
-        model.runTrial(i)
+        model.runTrial(i,target_direc)
                 
 
